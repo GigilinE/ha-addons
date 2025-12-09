@@ -16,6 +16,35 @@ The user id is made from three parts:
 
 For example for Italian number _3456789010_ the user id is the following _393456789010@s.whatsapp.net_
 
+### **Important: LID Format (Baileys v7)**
+
+Starting from version 1.7.0, WhatsApp uses a new identifier format called **LID (Local Identifier)** for group participants. This means:
+
+- In group chats, the `key.participant` field may contain an ID in the format `123456789@lid` instead of the traditional `393456789010@s.whatsapp.net`
+- The LID is an anonymous identifier that WhatsApp uses internally
+- To get the sender's info in groups, use `key.participant` (which may be LID or phone number format)
+- The `pushName` field still contains the contact's display name
+
+**Example of a message received in a group (v7 format):**
+```json
+{
+  "key": {
+    "remoteJid": "123456789-987654321@g.us",
+    "fromMe": false,
+    "id": "ABC123",
+    "participant": "258359613726883@lid"
+  },
+  "pushName": "John Doe",
+  "message": {
+    "extendedTextMessage": {
+      "text": "Hello!"
+    }
+  }
+}
+```
+
+**Note:** For private chats, the traditional phone number format `@s.whatsapp.net` is still used.
+
 ### **Send a simple text message**
 
 ```yaml
@@ -53,6 +82,71 @@ data:
     ptt: true # Send audio as a voice
 ```
 
+### **How to send a video**
+
+```yaml
+service: whatsapp.send_message
+data:
+  clientId: default
+  to: 391234567890@s.whatsapp.net
+  body:
+    video:
+      url: "https://example.com/video.mp4"
+    caption: Video description
+```
+
+### **How to send a video note (circle video)**
+
+```yaml
+service: whatsapp.send_message
+data:
+  clientId: default
+  to: 391234567890@s.whatsapp.net
+  body:
+    video:
+      url: "https://example.com/video.mp4"
+    ptv: true # Send as video note (circle)
+```
+
+### **How to send a GIF**
+
+```yaml
+service: whatsapp.send_message
+data:
+  clientId: default
+  to: 391234567890@s.whatsapp.net
+  body:
+    video:
+      url: "https://example.com/animation.mp4"
+    gifPlayback: true
+```
+
+### **How to send a document/file**
+
+```yaml
+service: whatsapp.send_message
+data:
+  clientId: default
+  to: 391234567890@s.whatsapp.net
+  body:
+    document:
+      url: "https://example.com/document.pdf"
+    mimetype: "application/pdf"
+    fileName: "my_document.pdf"
+```
+
+### **How to send a sticker**
+
+```yaml
+service: whatsapp.send_message
+data:
+  clientId: default
+  to: 391234567890@s.whatsapp.net
+  body:
+    sticker:
+      url: "https://example.com/sticker.webp"
+```
+
 ### **How to send a location**
 
 ```yaml
@@ -64,6 +158,56 @@ data:
     location:
       degreesLatitude: 24.121231
       degreesLongitude: 55.1121221
+```
+
+### **How to send a contact**
+
+```yaml
+service: whatsapp.send_message
+data:
+  clientId: default
+  to: 391234567890@s.whatsapp.net
+  body:
+    contacts:
+      displayName: "John Doe"
+      contacts:
+        - vcard: |
+            BEGIN:VCARD
+            VERSION:3.0
+            FN:John Doe
+            TEL;type=CELL;type=VOICE;waid=391234567890:+39 123 456 7890
+            END:VCARD
+```
+
+### **How to send a view once message (image/video)**
+
+```yaml
+service: whatsapp.send_message
+data:
+  clientId: default
+  to: 391234567890@s.whatsapp.net
+  body:
+    image:
+      url: "https://example.com/image.png"
+    viewOnce: true
+    caption: This image can only be viewed once
+```
+
+### **How to send a poll**
+
+```yaml
+service: whatsapp.send_message
+data:
+  clientId: default
+  to: 391234567890@s.whatsapp.net
+  body:
+    poll:
+      name: "What's your favorite color?"
+      values:
+        - Red
+        - Blue
+        - Green
+      selectableCount: 1
 ```
 
 ### **How to subscribe to presence update**

@@ -1,3 +1,18 @@
+## 1.7.0
+
+- **Major upgrade to Baileys v7.0.0-rc.9** - Fixes WhatsApp disconnection issues
+- Migrated to ES Modules (Node.js >= 20 required)
+- Added support for LID (Local Identifier) format used in WhatsApp groups
+- **Breaking change:** Re-authentication required after update
+- Fixed connection stability issues
+
+**NOTE:** WhatsApp now uses LID format for group participants. The `remoteJid` in groups may appear as `123456789@lid` instead of the traditional phone number format. The addon handles this automatically.
+
+## 1.6.0
+
+- Updated whatsapp library
+- Updated docker base image
+
 ## 1.5.0
 
 - Updated whatsapp library

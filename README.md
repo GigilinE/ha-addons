@@ -23,6 +23,13 @@ A WhatsApp API client that connects through the WhatsApp Web browser app
 
 **NOTE:** I can't guarantee you will not be blocked by using this method, although it has worked for me. WhatsApp does not allow bots or unofficial clients on their platform, so this shouldn't be considered totally safe.
 
+## What's New in v1.7.0
+
+- **Upgraded to Baileys v7.0.0-rc.9** - Major stability improvements and fixes for WhatsApp disconnection issues
+- **LID Support** - Full support for WhatsApp's new Local Identifier format used in groups
+- **ES Modules** - Migrated to modern JavaScript modules (requires Node.js >= 20)
+- **Re-authentication required** after updating to this version
+
 ## Installation guide
 Install add-on from this repository:
 ```

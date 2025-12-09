@@ -1,7 +1,7 @@
 name: Whatsapp
-version: "1.7.0"
+version: "1.8.0"
 slug: whatsapp_addon
-description: Whatsapp addon for send message from Home Assistant
+description: Whatsapp addon for send message from Home Assistant with AI integration
 url: "https://github.com/GigilinE/ha-addons/tree/main/whatsapp_addon"
 homeassistant_api: true
 hassio_api: true
@@ -17,6 +17,50 @@ map:
 options:
   clients:
     - default
+  ai:
+    openai_api_key: ""
+    anthropic_api_key: ""
+    default_ai: "openai"
+    model_openai: "gpt-4o-mini"
+    model_anthropic: "claude-3-haiku-20240307"
+    system_prompt: "Sei un assistente domestico intelligente chiamato Arya. Rispondi in modo conciso e utile."
+    max_tokens: 500
+  business_hours:
+    enabled: false
+    start_hour: 9
+    end_hour: 18
+    work_days: [1, 2, 3, 4, 5]
+    auto_reply_message: "Grazie per il messaggio. Siamo attualmente chiusi. Ti risponderemo appena possibile."
+  authorized_numbers: []
+  groups:
+    famiglia: ""
+    lavoro: ""
+  logging:
+    enabled: false
+    log_file: "/config/whatsapp_log.json"
 schema:
   clients:
     - str
+  ai:
+    openai_api_key: str?
+    anthropic_api_key: str?
+    default_ai: list(openai|anthropic)?
+    model_openai: str?
+    model_anthropic: str?
+    system_prompt: str?
+    max_tokens: int(100,4000)?
+  business_hours:
+    enabled: bool?
+    start_hour: int(0,23)?
+    end_hour: int(0,23)?
+    work_days:
+      - int(0,6)
+    auto_reply_message: str?
+  authorized_numbers:
+    - str
+  groups:
+    famiglia: str?
+    lavoro: str?
+  logging:
+    enabled: bool?
+    log_file: str?

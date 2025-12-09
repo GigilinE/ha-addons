@@ -49,7 +49,7 @@ data:
   to: 391234567890@s.whatsapp.net
   body:
     audio:
-      url: "https://github.com/giuseppecastaldo/ha-addons/blob/main/whatsapp_addon/examples/hello_world.mp3?raw=true"
+      url: "https://github.com/GigilinE/ha-addons/blob/main/whatsapp_addon/examples/hello_world.mp3?raw=true"
     ptt: true # Send audio as a voice
 ```
 

@@ -3,7 +3,7 @@
 
 _Write your Whatsapp message from Home Assistant_
 
-<img src="https://github.com/giuseppecastaldo/ha-addons/blob/main/whatsapp_addon/logo.png?raw=true" width="400"/>
+<img src="https://github.com/GigilinE/ha-addons/blob/main/whatsapp_addon/logo.png?raw=true" width="400"/>
 
 ![Supports aarch64 Architecture][aarch64-shield]
 ![Supports amd64 Architecture][amd64-shield]
@@ -26,7 +26,7 @@ A WhatsApp API client that connects through the WhatsApp Web browser app
 Install add-on from this repository:
 
 ```
-https://github.com/giuseppecastaldo/ha-addons
+https://github.com/GigilinE/ha-addons
 ```
 
 Start the add-on and in a few seconds you will see a persistent notification with QRCode, please scan this one with Whatsapp Mobile app.

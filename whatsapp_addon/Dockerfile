@@ -1,7 +1,7 @@
 ARG BUILD_FROM
 FROM ${BUILD_FROM}
 
-RUN apk add --no-cache git npm nodejs python3 make g++
+RUN apk update && apk upgrade && apk add --no-cache git npm nodejs
 
 COPY . /
 RUN chmod a+x /run.sh

@@ -1,7 +1,8 @@
 {
   "name": "whatsapp_hass_addon",
-  "version": "1.6.1",
+  "version": "1.7.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,6 +10,9 @@
   },
   "author": "Giuseppe Castaldo",
   "license": "ISC",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "dependencies": {
     "axios": "^1.6.0",
     "body-parser": "^1.20.0",

@@ -1,14 +1,14 @@
-const express = require("express");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const axios = require("axios");
-const fs = require("fs");
-const { WhatsappClient } = require("./whatsapp");
+import express from "express";
+import bodyParser from "body-parser";
+import cors from "cors";
+import axios from "axios";
+import fs from "fs";
+import { WhatsappClient } from "./whatsapp.js";
+import log4js from "log4js";
+import qrimage from "qr-image";
 
-var logger = require("log4js").getLogger();
+const logger = log4js.getLogger();
 logger.level = "info";
-
-var qrimage = require("qr-image");
 
 const app = express();
 const port = 3000;
@@ -88,7 +88,7 @@ const onPresenceUpdate = (presence, key) => {
 
 const onLogout = async (key) => {
   logger.info(`Client ${key} was logged out. Restarting...`);
-  fs.rm(`/data/${key}`, { recursive: true });
+  fs.rm(`/data/${key}`, { recursive: true }, () => {});
 
   init(key);
 };

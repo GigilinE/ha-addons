@@ -7,7 +7,11 @@ COPY . /
 RUN chmod a+x /run.sh
 RUN chmod a+x /finish.sh
 
-RUN cd /Baileys && npm i -f && cd .. && npm install -f
+# Build Baileys (TypeScript to JS)
+RUN cd /Baileys && npm install && npm run build
+
+# Install addon dependencies
+RUN npm install -f
 
 EXPOSE 3000
 CMD [ "/run.sh" ]

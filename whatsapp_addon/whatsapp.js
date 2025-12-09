@@ -1,11 +1,11 @@
-const EventEmitter = require("eventemitter2");
+import EventEmitter from "eventemitter2";
+import pino from "pino";
 
-const makeWASocket = require("./Baileys").default;
-const {
+import makeWASocket, {
   DisconnectReason,
   useMultiFileAuthState,
   fetchLatestBaileysVersion,
-} = require("./Baileys");
+} from "./Baileys/lib/index.js";
 
 const MessageType = {
   text: "conversation",
@@ -63,7 +63,7 @@ class WhatsappClient extends EventEmitter {
       auth: state,
       syncFullHistory: false,
       markOnlineOnConnect: !this.#offline,
-      logger: require("pino")({ level: "silent" }),
+      logger: pino({ level: "silent" }),
       generateHighQualityLinkPreview: true,
       browser: ["Ubuntu", "Chrome", "20.0.04"],
       defaultQueryTimeoutMs: undefined,
@@ -216,7 +216,7 @@ class WhatsappClient extends EventEmitter {
       try {
         return await this.#conn.sendMessage(id, msg, options);
       } catch (err) {
-        throw new WhatsappError(err.output.payload.statusCode);
+        throw new WhatsappError(err.output?.payload?.statusCode || 500);
       }
     }
 
@@ -237,7 +237,7 @@ class WhatsappClient extends EventEmitter {
     try {
       await this.#conn.sendPresenceUpdate(type, id);
     } catch (err) {
-      throw new WhatsappError(err.output.payload.statusCode);
+      throw new WhatsappError(err.output?.payload?.statusCode || 500);
     }
   };
 
@@ -254,7 +254,7 @@ class WhatsappClient extends EventEmitter {
       try {
         await this.#conn.presenceSubscribe(id);
       } catch (err) {
-        throw new WhatsappError(err.output.payload.statusCode);
+        throw new WhatsappError(err.output?.payload?.statusCode || 500);
       }
     } else {
       throw new WhatsappNumberNotFoundError(phone);
@@ -269,7 +269,7 @@ class WhatsappClient extends EventEmitter {
     try {
       await this.#conn.updateProfileStatus(status);
     } catch (err) {
-      throw new WhatsappError(err.output.payload.statusCode);
+      throw new WhatsappError(err.output?.payload?.statusCode || 500);
     }
   };
 }
@@ -297,21 +297,22 @@ class WhatsappError extends Error {
     428: "Connection Closed",
     408: "Connection Lost",
     440: "Connection Replaced",
-    408: "Timed Out",
     401: "Logged Out",
     500: "Bad Session",
     515: "Restart Required",
     411: "Multidevice Mismatch",
+    403: "Forbidden",
+    503: "Unavailable Service",
   };
 
-  constructor(message = "", ...args) {
-    super(message, ...args);
+  constructor(code = 500, ...args) {
+    super(String(code), ...args);
     this.name = "WhatsappError";
-    this.code = Number(this.message);
-    this.message = `Send message failed. Whatsapp error ${this.message}: ${
-      this.#errors[this.code]
+    this.code = Number(code);
+    this.message = `Send message failed. Whatsapp error ${this.code}: ${
+      this.#errors[this.code] || "Unknown error"
     }`;
   }
 }
 
-module.exports = { WhatsappClient, MessageType };
+export { WhatsappClient, MessageType };

@@ -37,12 +37,12 @@
 
 ## 1.3.5
 
-- Revert [(Pull request)](https://github.com/GigilinE/ha-addons/pull/33)
+- Revert [(Pull request)](https://github.com/GigilinE/whatsapp-addons-ha/pull/33)
 
 ## 1.3.4
 
-- Bug fixed [(Pull request)](https://github.com/GigilinE/ha-addons/pull/33)
-- Bug fixed [(Pull request)](https://github.com/GigilinE/ha-addons/pull/55)
+- Bug fixed [(Pull request)](https://github.com/GigilinE/whatsapp-addons-ha/pull/33)
+- Bug fixed [(Pull request)](https://github.com/GigilinE/whatsapp-addons-ha/pull/55)
 
 ## 1.3.3
 

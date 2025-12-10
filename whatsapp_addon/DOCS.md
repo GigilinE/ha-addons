@@ -21,7 +21,7 @@ Complete documentation for the WhatsApp add-on for Home Assistant.
 
 1. Add this repository to Home Assistant:
    ```
-   https://github.com/GigilinE/ha-addons
+   https://github.com/GigilinE/whatsapp-addons-ha
    ```
 
 2. Install the WhatsApp add-on from the add-on store

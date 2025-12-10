@@ -5,7 +5,7 @@
 
 _Send and receive WhatsApp messages from Home Assistant_
 
-<img src="https://github.com/GigilinE/ha-addons/blob/main/whatsapp_addon/logo.png?raw=true" width="400"/>
+<img src="https://github.com/GigilinE/whatsapp-addons-ha/blob/main/whatsapp_addon/logo.png?raw=true" width="400"/>
 
 ![Supports aarch64 Architecture][aarch64-shield]
 ![Supports amd64 Architecture][amd64-shield]
@@ -25,7 +25,7 @@ A WhatsApp API client that connects through the WhatsApp Web browser app.
 
 ## Quick Start
 
-1. Add this repository: `https://github.com/GigilinE/ha-addons`
+1. Add this repository: `https://github.com/GigilinE/whatsapp-addons-ha`
 2. Install and start the add-on
 3. Scan the QR code with WhatsApp
 4. Add `whatsapp:` to `configuration.yaml`

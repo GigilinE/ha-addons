@@ -58,3 +58,9 @@ For complete documentation, see **[DOCS.md](whatsapp_addon/DOCS.md)**
 ## Changelog
 
 See **[CHANGELOG.md](whatsapp_addon/CHANGELOG.md)** for version history.
+
+## Credits
+
+This project was originally created by **Giuseppe Castaldo** (versions up to 1.5.0).
+
+From version 1.6.0 onwards, the project is maintained by **GigilinE**.

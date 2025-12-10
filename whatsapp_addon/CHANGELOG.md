@@ -1,24 +1,3 @@
-## 1.8.0
-
-- **AI Integration** - Added support for ChatGPT (OpenAI) and Claude (Anthropic) APIs
-  - Configurable API keys, models, and system prompts
-  - New `/ai/chat` endpoint for AI conversations
-  - Conversation history support for context-aware responses
-- **Business Hours** - Auto-reply configuration for outside working hours
-- **Authorization System** - Whitelist for authorized phone numbers
-- **Command System** - Support for commands with `.`, `/`, or `!` prefix
-- **Rate Limiting** - Anti-spam protection (configurable max messages per minute)
-- **Conversation Context** - Tracks conversation state for multi-step interactions
-- **Group Management** - Named group identification and configuration
-- **Activity Logging** - Optional logging of all interactions to file
-- **New API Endpoints:**
-  - `POST /ai/chat` - Chat with AI
-  - `GET /config` - Get addon configuration
-  - `POST /checkAuthorized` - Check if number is authorized
-  - `GET /businessHours/check` - Check business hours status
-  - `POST /log` - Log activity
-  - `GET /logs` - Retrieve logs
-
 ## 1.7.0
 
 - **Major upgrade to Baileys v7.0.0-rc.9** - Fixes WhatsApp disconnection issues

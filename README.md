@@ -53,6 +53,8 @@ A WhatsApp API client that connects through the WhatsApp Web browser app.
 
 For complete documentation, see **[DOCS.md](whatsapp_addon/DOCS.md)**
 
+🇮🇹 Documentazione in italiano: **[DOCS_IT.md](whatsapp_addon/DOCS_IT.md)**
+
 ## Changelog
 
 See **[CHANGELOG.md](whatsapp_addon/CHANGELOG.md)** for version history.

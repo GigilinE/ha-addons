@@ -39,3 +39,5 @@ See **[DOCS.md](DOCS.md)** for complete documentation including:
 - Event handling
 - Sample automations
 - Troubleshooting
+
+🇮🇹 Documentazione in italiano: **[DOCS_IT.md](DOCS_IT.md)**

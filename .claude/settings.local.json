@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:baileys.wiki)",
+      "Bash(node:*)",
+      "Bash(python:*)",
+      "Bash(cmd /c \"powershell -Command \"\"(Get-Content ''C:\\Users\\luigi\\Documents\\GitHub\\ha-addons\\flow-nodered.json.json'').Substring(0, 50000)\"\"\")",
+      "Bash(cmd /c \"powershell -Command \"\"$content = Get-Content ''C:\\Users\\luigi\\Documents\\GitHub\\ha-addons\\flow-nodered.json.json'' -Raw; $json = $content | ConvertFrom-Json; $json | ConvertTo-Json -Depth 100 | Out-File ''C:\\Users\\luigi\\Documents\\GitHub\\ha-addons\\flow-formatted.json'' -Encoding UTF8\"\"\")",
+      "Bash(cmd /c \"powershell -Command \"\"$c = Get-Content ''C:\\Users\\luigi\\Documents\\GitHub\\ha-addons\\flow-nodered.json.json'' -Raw; Write-Output $c.Length\"\"\")",
+      "Bash(cmd /c \"type C:\\Users\\luigi\\Documents\\GitHub\\ha-addons\\flow-nodered.json.json\")",
+      "Bash(git rm:*)"
+    ]
+  }
+}

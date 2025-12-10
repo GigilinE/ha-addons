@@ -2,6 +2,8 @@
 
 Complete documentation for the WhatsApp add-on for Home Assistant.
 
+🇮🇹 [Versione italiana](DOCS_IT.md)
+
 ## Table of Contents
 
 - [Installation](#installation)

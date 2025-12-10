@@ -1,38 +1,102 @@
-# Home Assistant Add-on: Whatsapp add-on
+# Home Assistant Add-on: WhatsApp
 
-## How to use
+Complete documentation for the WhatsApp add-on for Home Assistant.
 
-### **How to add other Whatsapp sessions**
+## Table of Contents
 
-Go to configuration page in clients input box digit the desired clientId. This one represents an identifier for the session.
+- [Installation](#installation)
+- [Configuration](#configuration)
+- [User ID Format](#user-id-format)
+- [LID Format (Baileys v7)](#lid-format-baileys-v7)
+- [Sending Messages](#sending-messages)
+- [Receiving Messages](#receiving-messages)
+- [Events](#events)
+- [Sample Automations](#sample-automations)
 
-### **How to get a User ID**
+---
 
-The user id is made from three parts:
+## Installation
 
-- Country code (Example 39 (Italy))
-- User's number
-- And a static part: @s.whatsapp.net (for users) @g.us (for groups)
+1. Add this repository to Home Assistant:
+   ```
+   https://github.com/GigilinE/ha-addons
+   ```
 
-For example for Italian number _3456789010_ the user id is the following _393456789010@s.whatsapp.net_
+2. Install the WhatsApp add-on from the add-on store
 
-### **Important: LID Format (Baileys v7)**
+3. Start the add-on - you will see a persistent notification with a QR code
 
-Starting from version 1.7.0, WhatsApp uses a new identifier format called **LID (Local Identifier)** for group participants. This means:
+4. Scan the QR code with your WhatsApp mobile app (Settings > Linked Devices > Link a Device)
 
-- In group chats, the `key.participant` field may contain an ID in the format `123456789@lid` instead of the traditional `393456789010@s.whatsapp.net`
-- The LID is an anonymous identifier that WhatsApp uses internally
-- To get the sender's info in groups, use `key.participant` (which may be LID or phone number format)
-- The `pushName` field still contains the contact's display name
+5. After successful pairing, restart Home Assistant
 
-**Example of a message received in a group (v7 format):**
+6. Add the following to your `configuration.yaml`:
+   ```yaml
+   whatsapp:
+   ```
+
+7. Restart Home Assistant again
+
+8. You should now have the `whatsapp.send_message` service available
+
+---
+
+## Configuration
+
+### Multiple WhatsApp Sessions
+
+You can configure multiple WhatsApp sessions in the add-on configuration:
+
+```yaml
+clients:
+  - default
+  - business
+  - family
+```
+
+Each client ID represents a separate WhatsApp session that needs to be authenticated with its own QR code.
+
+---
+
+## User ID Format
+
+WhatsApp user IDs are composed of:
+
+| Part | Description | Example |
+|------|-------------|---------|
+| Country code | Without + | `39` (Italy) |
+| Phone number | Without spaces | `3456789010` |
+| Suffix | User or group | `@s.whatsapp.net` or `@g.us` |
+
+**Examples:**
+- User: `393456789010@s.whatsapp.net`
+- Group: `120363044852872915@g.us`
+- Broadcast: `status@broadcast`
+
+---
+
+## LID Format (Baileys v7)
+
+Starting from version 1.7.0, WhatsApp uses a new identifier format called **LID (Local Identifier)**.
+
+### What is LID?
+
+- LID is an anonymous identifier that WhatsApp uses internally
+- In group chats, `key.participant` may contain `123456789@lid` instead of the phone number
+- In private chats with `addressingMode: "lid"`, `remoteJid` may be LID format
+- The `remoteJidAlt` field contains the real phone number when available
+
+### Message Structure (v7)
+
+**Private chat with LID:**
 ```json
 {
   "key": {
-    "remoteJid": "123456789-987654321@g.us",
+    "remoteJid": "258359613726883@lid",
+    "remoteJidAlt": "393481844469@s.whatsapp.net",
     "fromMe": false,
     "id": "ABC123",
-    "participant": "258359613726883@lid"
+    "addressingMode": "lid"
   },
   "pushName": "John Doe",
   "message": {
@@ -43,20 +107,43 @@ Starting from version 1.7.0, WhatsApp uses a new identifier format called **LID 
 }
 ```
 
-**Note:** For private chats, the traditional phone number format `@s.whatsapp.net` is still used.
+**Group chat:**
+```json
+{
+  "key": {
+    "remoteJid": "123456789-987654321@g.us",
+    "fromMe": false,
+    "id": "ABC123",
+    "participant": "258359613726883@lid"
+  },
+  "pushName": "John Doe",
+  "message": {
+    "conversation": "Hello!"
+  }
+}
+```
 
-### **Send a simple text message**
+### Getting the Real Phone Number
+
+- Use `remoteJidAlt` when available (contains the real phone number)
+- The `pushName` field always contains the contact's display name
+
+---
+
+## Sending Messages
+
+### Text Message
 
 ```yaml
 service: whatsapp.send_message
 data:
   clientId: default
-  to: 391234567890@s.whatsapp.net # User ID
+  to: 391234567890@s.whatsapp.net
   body:
-    text: Hi it's a simple text message
+    text: Hello, this is a text message!
 ```
 
-### **How to send an image**
+### Image
 
 ```yaml
 service: whatsapp.send_message
@@ -65,24 +152,11 @@ data:
   to: 391234567890@s.whatsapp.net
   body:
     image:
-      url: "https://dummyimage.com/600x400/000/fff.png"
-    caption: Simple text
+      url: "https://example.com/image.png"
+    caption: Image description
 ```
 
-### **How to send audio message**
-
-```yaml
-service: whatsapp.send_message
-data:
-  clientId: default
-  to: 391234567890@s.whatsapp.net
-  body:
-    audio:
-      url: "https://github.com/GigilinE/ha-addons/blob/main/whatsapp_addon/examples/hello_world.mp3?raw=true"
-    ptt: true # Send audio as a voice
-```
-
-### **How to send a video**
+### Video
 
 ```yaml
 service: whatsapp.send_message
@@ -95,7 +169,7 @@ data:
     caption: Video description
 ```
 
-### **How to send a video note (circle video)**
+### Video Note (Circle)
 
 ```yaml
 service: whatsapp.send_message
@@ -105,10 +179,10 @@ data:
   body:
     video:
       url: "https://example.com/video.mp4"
-    ptv: true # Send as video note (circle)
+    ptv: true
 ```
 
-### **How to send a GIF**
+### GIF
 
 ```yaml
 service: whatsapp.send_message
@@ -121,7 +195,20 @@ data:
     gifPlayback: true
 ```
 
-### **How to send a document/file**
+### Audio Message
+
+```yaml
+service: whatsapp.send_message
+data:
+  clientId: default
+  to: 391234567890@s.whatsapp.net
+  body:
+    audio:
+      url: "https://example.com/audio.mp3"
+    ptt: true  # true = voice message, false = audio file
+```
+
+### Document/File
 
 ```yaml
 service: whatsapp.send_message
@@ -132,10 +219,10 @@ data:
     document:
       url: "https://example.com/document.pdf"
     mimetype: "application/pdf"
-    fileName: "my_document.pdf"
+    fileName: "document.pdf"
 ```
 
-### **How to send a sticker**
+### Sticker
 
 ```yaml
 service: whatsapp.send_message
@@ -147,7 +234,7 @@ data:
       url: "https://example.com/sticker.webp"
 ```
 
-### **How to send a location**
+### Location
 
 ```yaml
 service: whatsapp.send_message
@@ -156,11 +243,11 @@ data:
   to: 391234567890@s.whatsapp.net
   body:
     location:
-      degreesLatitude: 24.121231
-      degreesLongitude: 55.1121221
+      degreesLatitude: 41.9028
+      degreesLongitude: 12.4964
 ```
 
-### **How to send a contact**
+### Contact (vCard)
 
 ```yaml
 service: whatsapp.send_message
@@ -179,7 +266,7 @@ data:
             END:VCARD
 ```
 
-### **How to send a view once message (image/video)**
+### View Once (disappearing media)
 
 ```yaml
 service: whatsapp.send_message
@@ -190,10 +277,10 @@ data:
     image:
       url: "https://example.com/image.png"
     viewOnce: true
-    caption: This image can only be viewed once
+    caption: This can only be viewed once
 ```
 
-### **How to send a poll**
+### Poll
 
 ```yaml
 service: whatsapp.send_message
@@ -207,10 +294,40 @@ data:
         - Red
         - Blue
         - Green
-      selectableCount: 1
+      selectableCount: 1  # 1 = single choice, >1 = multiple choice
 ```
 
-### **How to subscribe to presence update**
+### Reaction
+
+```yaml
+service: whatsapp.send_message
+data:
+  clientId: default
+  to: 391234567890@s.whatsapp.net
+  body:
+    react:
+      text: "👍"  # empty string to remove reaction
+      key: "{{ trigger.event.data.key }}"
+```
+
+### Reply/Quote Message
+
+```yaml
+service: whatsapp.send_message
+data:
+  clientId: default
+  to: 391234567890@s.whatsapp.net
+  body:
+    text: This is a reply
+  options:
+    quoted: "{{ trigger.event.data }}"
+```
+
+---
+
+## Receiving Messages
+
+### Subscribe to Presence Updates
 
 ```yaml
 service: whatsapp.presence_subscribe
@@ -219,24 +336,53 @@ data:
   userId: 391234567890@s.whatsapp.net
 ```
 
+### Send Presence Update
+
+```yaml
+service: whatsapp.send_presence_update
+data:
+  clientId: default
+  type: available  # available, unavailable, composing, recording
+  to: 391234567890@s.whatsapp.net
+```
+
 ---
 
 ## Events
 
-| Event type               | Description                           |
-| ------------------------ | ------------------------------------- |
-| new_whatsapp_message     | The message that was received         |
-| whatsapp_presence_update | Presence of contact in a chat updated |
+| Event | Description |
+|-------|-------------|
+| `new_whatsapp_message` | Fired when a new message is received |
+| `whatsapp_presence_update` | Fired when a contact's presence changes |
+
+### Event Data Structure
+
+```yaml
+# new_whatsapp_message
+event:
+  clientId: "default"
+  type: "conversation"  # or extendedTextMessage, imageMessage, etc.
+  key:
+    remoteJid: "391234567890@s.whatsapp.net"
+    remoteJidAlt: "391234567890@s.whatsapp.net"  # v7: real number
+    fromMe: false
+    id: "ABC123"
+    participant: ""  # only in groups
+    addressingMode: "lid"  # v7: lid or pn
+  pushName: "John Doe"
+  message:
+    conversation: "Hello!"
+  messageTimestamp: 1234567890
+```
 
 ---
 
-## **Sample automations**
+## Sample Automations
 
-## Ping Pong
+### Ping Pong
 
 ```yaml
-- alias: Ping Pong
-  description: ""
+- alias: WhatsApp Ping Pong
   trigger:
     - platform: event
       event_type: new_whatsapp_message
@@ -247,64 +393,61 @@ data:
     - service: whatsapp.send_message
       data:
         clientId: default
-        to: "{{ trigger.event.data.key.remoteJid }}"
+        to: "{{ trigger.event.data.key.remoteJidAlt or trigger.event.data.key.remoteJid }}"
         body:
           text: pong
-  mode: single
 ```
 
-## Arrive at home
+### Auto-reply When Away
 
 ```yaml
-- alias: Arrive at home
-  description: ""
+- alias: WhatsApp Auto Reply
   trigger:
-    - platform: device
-      domain: device_tracker
-      entity_id: device_tracker.iphone_13_pro
-      type: enter
+    - platform: event
+      event_type: new_whatsapp_message
+  condition:
+    - condition: state
+      entity_id: input_boolean.away_mode
+      state: "on"
+  action:
+    - service: whatsapp.send_message
+      data:
+        clientId: "{{ trigger.event.data.clientId }}"
+        to: "{{ trigger.event.data.key.remoteJidAlt or trigger.event.data.key.remoteJid }}"
+        body:
+          text: "I'm currently away. I'll reply as soon as possible."
+        options:
+          quoted: "{{ trigger.event.data }}"
+```
+
+### Notify on Arrival
+
+```yaml
+- alias: WhatsApp Arrival Notification
+  trigger:
+    - platform: zone
+      entity_id: person.john
       zone: zone.home
-  condition: []
+      event: enter
   action:
     - service: whatsapp.send_message
       data:
         clientId: default
         to: 391234567890@s.whatsapp.net
         body:
-          text: Hi, I'm at home
-  mode: single
+          text: "John just arrived home!"
 ```
 
-## Driving mode
+### React to Messages
 
 ```yaml
-- alias: Driving mode
-  description: ""
+- alias: WhatsApp Auto React
   trigger:
     - platform: event
       event_type: new_whatsapp_message
-  condition: []
-  action:
-    - service: whatsapp.send_message
-      data:
-        clientId: "{{ trigger.event.data.clientId }}" # Which instance of whatsapp should the message come from
-        to: "{{ trigger.event.data.key.remoteJid }}"
-        body:
-          text: Sorry, I'm driving, I will contact you soon
-        options:
-          quoted: "{{ trigger.event.data }}" # Quote message
-  mode: single
-```
-
-## Message reaction
-
-```yaml
-- alias: React to message
-  description: ""
-  trigger:
-    - platform: event
-      event_type: new_whatsapp_message
-  condition: []
+  condition:
+    - condition: template
+      value_template: "{{ 'thanks' in trigger.event.data.message.conversation|lower }}"
   action:
     - service: whatsapp.send_message
       data:
@@ -312,28 +455,73 @@ data:
         to: "{{ trigger.event.data.key.remoteJid }}"
         body:
           react:
-            text: "👍🏻" # Use an empty string to remove the reaction
+            text: "❤️"
             key: "{{ trigger.event.data.key }}"
-  mode: single
 ```
 
-## Presence notify (SUBSCRIBE FIRST!)
+### Presence Notification
 
 ```yaml
-- alias: Nuova automazione
-  description: ""
+- alias: WhatsApp Contact Online
   trigger:
     - platform: event
       event_type: whatsapp_presence_update
-      event_data: {}
   condition:
     - condition: template
-      value_template:
-        "{{ trigger.event.data.presences['391234567890@s.whatsapp.net'].lastKnownPresence
-        == 'available' }}"
+      value_template: >
+        {{ trigger.event.data.presences['391234567890@s.whatsapp.net'].lastKnownPresence == 'available' }}
   action:
-    - service: persistent_notification.create
+    - service: notify.mobile_app
       data:
-        message: Contact is online!
-  mode: single
+        message: "Contact is now online!"
 ```
+
+### Send Camera Snapshot
+
+```yaml
+- alias: WhatsApp Camera Snapshot
+  trigger:
+    - platform: event
+      event_type: new_whatsapp_message
+  condition:
+    - condition: template
+      value_template: "{{ trigger.event.data.message.conversation == '!camera' }}"
+  action:
+    - service: camera.snapshot
+      target:
+        entity_id: camera.front_door
+      data:
+        filename: /config/www/snapshot.jpg
+    - delay: 2
+    - service: whatsapp.send_message
+      data:
+        clientId: default
+        to: "{{ trigger.event.data.key.remoteJidAlt or trigger.event.data.key.remoteJid }}"
+        body:
+          image:
+            url: "http://YOUR_HA_IP:8123/local/snapshot.jpg"
+          caption: "Front door camera"
+```
+
+---
+
+## Troubleshooting
+
+### QR Code Not Appearing
+- Check the add-on logs for errors
+- Restart the add-on
+- Make sure port 3000 is not blocked
+
+### Messages Not Sending
+- Verify the user ID format is correct
+- Check if the add-on is connected (check logs)
+- Ensure you're not rate-limited by WhatsApp
+
+### Disconnection Issues
+- Version 1.7.0 includes fixes for disconnection issues
+- The add-on automatically reconnects when disconnected
+- If problems persist, delete the session folder and re-authenticate
+
+### LID Format Issues
+- Use `remoteJidAlt` instead of `remoteJid` for the real phone number
+- The `pushName` field always contains the display name

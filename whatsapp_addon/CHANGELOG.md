@@ -1,3 +1,10 @@
+## 1.7.1
+
+- Added complete documentation (English and Italian)
+- Added Italian translation for addon UI
+- Improved sample automations in docs
+- Added troubleshooting section
+
 ## 1.7.0
 
 - **Major upgrade to Baileys v7.0.0-rc.9** - Fixes WhatsApp disconnection issues

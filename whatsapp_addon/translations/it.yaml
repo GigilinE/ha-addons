@@ -1,0 +1,5 @@
+---
+configuration:
+  clients:
+    name: Client
+    description: Crea altri client WhatsApp

@@ -124,14 +124,14 @@ fs.readFile("data/options.json", function (error, content) {
           .sendMessage(message.to, message.body, message.options)
           .then(() => {
             res.send("OK");
-            logger.debug("Message successfully sended from addon.");
+            logger.info(`[${message.clientId}] Message sent successfully to ${message.to}`);
           })
           .catch((error) => {
             res.send("KO");
-            logger.error(error.message);
+            logger.error(`[${message.clientId}] Failed to send message to ${message.to}: ${error.message}`);
           });
       } else {
-        logger.error("Error in sending message. Client ID not found.");
+        logger.error(`Error in sending message. Client ID "${message.clientId}" not found.`);
         res.send("KO");
       }
     } else {
